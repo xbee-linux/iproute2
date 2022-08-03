@@ -1,0 +1,27 @@
+schema-version: 1.0
+
+type: builder
+
+description: |
+
+in:
+  version: "5.16.0"
+
+dependencies:
+  - bison
+  - m4
+  - flex
+
+provision:
+  - url:
+      from: https://www.kernel.org/pub/linux/utils/net/iproute2/iproute2-{% version %}.tar.xz
+      todir: "{% xbeeSrc %}"
+
+build:
+  - shell:
+      cmds:
+        - sed -i /ARPD/d Makefile
+        - rm -fv man/man8/arpd.8
+        - make
+        - make SBINDIR=/usr/sbin install DESTDIR={% xbeeOut %}
+      directory: "{% xbeeSrc %}/iproute2-{% version %}"
